@@ -5,9 +5,4 @@
         android:id="@+id/menu_settings"
         app:showAsAction="never"
         android:title="Preferences"/>
-
-    <item
-        android:id="@+id/menu_network"
-        app:showAsAction="never"
-        android:title="Reseau"/>
 </menu>

@@ -3,7 +3,6 @@ package com.example.kotlinfistapp
 import android.content.Context
 import android.content.Intent
 import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,10 +14,10 @@ class ListRecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.
     var items : List<ListeToDo> = ArrayList()
     var mContext = context
     lateinit var username : String
-    fun initData( currentUser : User)
+    fun initData(currentProfilListeToDo : ProfilListeToDo)
     {
-        items = currentUser.toDoLists
-        username = currentUser.name
+        items = currentProfilListeToDo.GetMesListesToDo()
+        username = currentProfilListeToDo.name
     }
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.todolist_item,p0,false)
@@ -50,7 +49,7 @@ class ListRecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.
         val titletextView : TextView = itemView.findViewById<TextView>(R.id.titleOfList)
         val parentLayout : ConstraintLayout = itemView.findViewById(R.id.parent_layout)
         fun bind(toDoList: ListeToDo){
-            titletextView.text = toDoList.titreListeToDo
+            titletextView.text = toDoList.GetTitreListeToDo()
         }
     }
 }

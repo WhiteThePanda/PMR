@@ -3,11 +3,8 @@
 package com.example.kotlinfistapp
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +14,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.google.gson.Gson
 
-class ItemRecyclerAdapter(context : Context, dataset : List<User>,username : String,position :Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class ItemRecyclerAdapter(context : Context, dataset : List<ProfilListeToDo>, username : String, position :Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     val mContext = context
     var items : List<ItemToDo> = ArrayList()
     var mdataset = dataset
@@ -25,11 +22,11 @@ class ItemRecyclerAdapter(context : Context, dataset : List<User>,username : Str
     var mlistPosition = position
     init {
         Log.d("PMRMoi","init")
-        for( user : User in mdataset)
+        for( profilListeToDo : ProfilListeToDo in mdataset)
         {
-            if(user.name == musername)
+            if(profilListeToDo.name == musername)
             {
-                items = user.toDoLists[mlistPosition].lesItems
+                items = profilListeToDo.GetMesListesToDo()[mlistPosition].GetLesItems()
             }
         }
     }
@@ -52,7 +49,7 @@ class ItemRecyclerAdapter(context : Context, dataset : List<User>,username : Str
                     var editor: SharedPreferences.Editor? = null
                     sp = PreferenceManager.getDefaultSharedPreferences(mContext)
                     editor = sp?.edit()
-                    items[position].fait = !items[position].fait
+                    items[position].setFait(!items[position].getFait())
                     val gson = Gson()
                     val chaine_json = gson.toJson(mdataset)
                     Log.d("PMRMoi","inAdapter")
@@ -69,9 +66,9 @@ class ItemRecyclerAdapter(context : Context, dataset : List<User>,username : Str
         val titletextView : TextView = itemView.findViewById<TextView>(R.id.descriptionOfItem)
         val cbitem : CheckBox = itemView.findViewById(R.id.itemcb)
         fun bind(itemToDo: ItemToDo){
-            titletextView.text = itemToDo._description
-            cbitem.isChecked = itemToDo.fait
-            Log.d("PMRMoi",itemToDo.fait.toString())
+            titletextView.text = itemToDo.getDescription()
+            cbitem.isChecked = itemToDo.getFait()
+            Log.d("PMRMoi",itemToDo.getFait().toString())
         }
     }
 }

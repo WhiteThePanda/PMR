@@ -1,7 +1,6 @@
 @file:Suppress("DEPRECATION")
 
 package com.example.kotlinfistapp
-import android.content.ClipData
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -12,11 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import org.json.JSONException
-import org.json.JSONObject
 
 
 class ShowListActivity : AppCompatActivity(), View.OnClickListener{
@@ -26,7 +21,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener{
     var username : String = ""
     lateinit var itemAdapter : ItemRecyclerAdapter
     val gson = Gson()
-    var dataset: MutableList<User> = mutableListOf()
+    var dataset: MutableList<ProfilListeToDo> = mutableListOf()
     var position : Int = 0
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,17 +38,17 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener{
         var chaine_json : String = sp?.getString("data","")!!
         if(chaine_json=="")
         {
-            val users = listOf<User>(User(getString(R.string.defaultPseudo)))
+            val users = listOf<ProfilListeToDo>(ProfilListeToDo(getString(R.string.defaultPseudo)))
             chaine_json = gson.toJson(users)
         }
         Log.d("PMRMoi","inActivity")
         Log.d("PMRMoi",chaine_json)
-        dataset = gson.fromJson(chaine_json, Array<User>::class.java).toMutableList()
-        for( user : User in dataset)
+        dataset = gson.fromJson(chaine_json, Array<ProfilListeToDo>::class.java).toMutableList()
+        for( profilListeToDo : ProfilListeToDo in dataset)
         {
-            if(user.name == username)
+            if(profilListeToDo.name == username)
             {
-                listOfItem = user.toDoLists[position].lesItems
+                listOfItem = profilListeToDo.GetMesListesToDo()[position].GetLesItems()
             }
         }
         itemAdapter= ItemRecyclerAdapter(this,dataset,username,position)
@@ -71,7 +66,6 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener{
                 itemAdapter?.notifyDataSetChanged()
             }
             R.id.itemcb->{
-
             }
         }
     }
