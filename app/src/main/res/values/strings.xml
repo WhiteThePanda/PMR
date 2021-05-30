@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">firstApp</string>
+    <string name="hello_app">Hello App!</string>
+    <string name="name">nom :</string>
+    <string name="ok">ok !</string>
+    <string name="defaultPseudo">Inconnu</string>
+    <string name="inputList">Nouvelle Liste</string>
+    <string name="inputItem">Nouveau Item</string>
+</resources>
