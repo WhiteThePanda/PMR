@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     try {
                         val hash : String = DataProvider.authenticate()
                         Log.d(TAG,hash)
-                        val listsOfUser : List<ProfilListeToDo> = DataProvider.getUsersFromAPI()
+                        val listsOfUser : List<ProfilListeToDo> = DataProvider.getUsersFromAPI(hash)
                         Log.d(TAG,listsOfUser.toString())
                     } catch (e: Exception) {
                         Log.d(TAG,e.toString())

@@ -13,16 +13,12 @@ object DataProvider {
         .build()
     private val service = retrofit.create(ToDoService::class.java)
 
-    suspend fun getUsersFromAPI(): List<ProfilListeToDo> {
-        return service.getUsers().users
+    suspend fun getUsersFromAPI(hash : String): List<ProfilListeToDo> {
+        return service.getUsers(hash).users
     }
     suspend fun authenticate(): String
     {
         return service.authenticate().hash
-    }
-    suspend fun getListOfUser(): List<ListeToDo>
-    {
-        return  service.getListOfActuelUser()
     }
     public fun refreshURL(newUrl : String)
     {
