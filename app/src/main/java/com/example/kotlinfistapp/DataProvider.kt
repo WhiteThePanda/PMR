@@ -1,4 +1,5 @@
 package com.example.kotlinfistapp
+import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -17,7 +18,7 @@ object DataProvider {
     }
     suspend fun authenticate(): String
     {
-        return service.authenticate()
+        return service.authenticate().hash
     }
     public fun refreshURL(newUrl : String)
     {

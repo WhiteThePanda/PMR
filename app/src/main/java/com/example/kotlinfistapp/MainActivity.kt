@@ -112,10 +112,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 Log.d("PMRMoi","test")
                 activityScope.launch {
                     try {
-                        val hash = DataProvider.authenticate()
-                        Log.d(TAG,hash.toString())
+                        val hash : String = DataProvider.authenticate()
+                        Log.d(TAG,hash)
                         val users = DataProvider.getUsersFromAPI()
-
                         Log.d(TAG,users.toString())
                     } catch (e: Exception) {
                         Log.d(TAG,e.toString())
