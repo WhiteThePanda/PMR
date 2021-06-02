@@ -5,9 +5,8 @@ import java.io.Serializable
 
 
 class ProfilListeToDo(var name: String):Serializable {
-    @SerializedName("user")
+    @SerializedName("pseudo")
     private var _login : String = ""
-    @SerializedName("lists")
     private var mesListesToDo : MutableList<ListeToDo> = mutableListOf<ListeToDo>()
 
     init {

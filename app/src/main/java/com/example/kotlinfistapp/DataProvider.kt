@@ -7,22 +7,30 @@ object DataProvider {
 
     private var BASE_URL = "http://tomnab.fr/todo-api/"
 
-    private val retrofit = Retrofit.Builder()
+    private var retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val service = retrofit.create(ToDoService::class.java)
 
     suspend fun getUsersFromAPI(): List<ProfilListeToDo> {
-        return service.getUsers().profilListesToDo
+        return service.getUsers().users
     }
     suspend fun authenticate(): String
     {
         return service.authenticate().hash
     }
+    suspend fun getListOfUser(): List<ListeToDo>
+    {
+        return  service.getListOfActuelUser()
+    }
     public fun refreshURL(newUrl : String)
     {
         BASE_URL=newUrl
+        retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
 }

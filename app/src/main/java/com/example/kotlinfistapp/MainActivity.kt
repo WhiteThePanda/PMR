@@ -114,18 +114,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     try {
                         val hash : String = DataProvider.authenticate()
                         Log.d(TAG,hash)
-                        val users = DataProvider.getUsersFromAPI()
-                        Log.d(TAG,users.toString())
+                        val listsOfUser : List<ProfilListeToDo> = DataProvider.getUsersFromAPI()
+                        Log.d(TAG,listsOfUser.toString())
                     } catch (e: Exception) {
                         Log.d(TAG,e.toString())
                     }
                 }
                 val bundle = Bundle()
                 bundle.putString("pseudo", etPseudo!!.text.toString())
-                val toSecondAct: Intent
+               /* val toSecondAct: Intent
                 toSecondAct = Intent(this@MainActivity, ChoixListActivity::class.java)
                 toSecondAct.putExtras(bundle)
-                startActivity(toSecondAct)
+                startActivity(toSecondAct)*/
             }
             R.id.pseudo -> {
                 myToast = Toast.makeText(this, "pseudo", Toast.LENGTH_LONG)
