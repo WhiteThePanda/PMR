@@ -11,19 +11,21 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ListAdapter
 import com.google.gson.Gson
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
 
 
-class ShowListActivity : AppCompatActivity(), View.OnClickListener{
+class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecyclerAdapter.ActionListener{
     var sp: SharedPreferences? = null
     var editor: SharedPreferences.Editor? = null
     var edtItem : EditText?= null
-    var username : String = ""
+    var id : String = ""
     lateinit var itemAdapter : ItemRecyclerAdapter
-    val gson = Gson()
-    var dataset: MutableList<ProfilListeToDo> = mutableListOf()
-    var position : Int = 0
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
+    lateinit var recyclerView : RecyclerView
+    private val activityScope = CoroutineScope(Dispatchers.IO)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.show_list_activity)
@@ -31,42 +33,55 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener{
         edtItem = findViewById(R.id.newItem)
         editor = sp?.edit()
         findViewById<Button>(R.id.buttonCreateItem).setOnClickListener(this)
-        val recyclerView = findViewById<RecyclerView>(R.id.itemRecyclerView)
+        recyclerView = findViewById<RecyclerView>(R.id.itemRecyclerView)
         recyclerView.layoutManager= LinearLayoutManager(this)
-        username = this.intent.getStringExtra("name").toString()
-        position = this.intent.getIntExtra("position",0)
-        var chaine_json : String = sp?.getString("data","")!!
-        if(chaine_json=="")
-        {
-            val users = listOf<ProfilListeToDo>(ProfilListeToDo(getString(R.string.defaultPseudo)))
-            chaine_json = gson.toJson(users)
+        id = this.intent.getStringExtra("id").toString()
+        activityScope.launch {
+            val hash = sp?.getString("hash","")
+            Log.d("PMRMoi", id)
+            listOfItem = DataProvider.getItemOfTheList(id, hash.toString())
+            RefreshRecyclerOnMainThread()
         }
-        Log.d("PMRMoi","inActivity")
-        Log.d("PMRMoi",chaine_json)
-        dataset = gson.fromJson(chaine_json, Array<ProfilListeToDo>::class.java).toMutableList()
-        for( profilListeToDo : ProfilListeToDo in dataset)
-        {
-            if(profilListeToDo.name == username)
-            {
-                listOfItem = profilListeToDo.GetMesListesToDo()[position].GetLesItems()
-            }
-        }
-        Log.d("PMRMoi",listOfItem.toString())
-        itemAdapter= ItemRecyclerAdapter(this,dataset,username,position)
-        recyclerView.adapter = itemAdapter
     }
-
+    private suspend fun RefreshRecyclerOnMainThread()
+    {
+        withContext(Main){
+            itemAdapter= ItemRecyclerAdapter(this@ShowListActivity,listOfItem)
+            recyclerView.adapter = itemAdapter
+        }
+    }
     override fun onClick(v: View) {
         when (v.id) {
             R.id.buttonCreateItem -> {
-                listOfItem.add(ItemToDo(edtItem?.text.toString()))
-                val chaine_json = gson.toJson(dataset)
-                Log.d("PMRMoi",chaine_json)
-                editor?.putString("data",chaine_json)
-                editor?.commit()
-                itemAdapter?.notifyDataSetChanged()
+                activityScope.launch {
+                    val hash = sp?.getString("hash","")
+                    DataProvider.addItemInTheList(id,edtItem?.text.toString(),hash.toString())
+                    listOfItem.clear()
+                    listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
+                    withContext(Main)
+                    {
+                        Log.d("PMRMoi","test")
+                        itemAdapter?.notifyDataSetChanged()
+                    }
+                }
             }
-            R.id.itemcb->{
+        }
+    }
+
+    override fun onItemClicked(position: Int) {
+        Log.d("PMRMoi",listOfItem[position].faitText)
+        activityScope.launch {
+            val hash = sp?.getString("hash","")
+            var value : String = "0"
+            if(listOfItem[position].faitText=="0")value = "1"
+            DataProvider.changeItemInTheList(id,listOfItem[position].id,value,hash.toString())
+            val temp = DataProvider.getItemOfTheList(id, hash.toString())
+            withContext(Main)
+            {
+                listOfItem.clear()
+                listOfItem.addAll(temp)
+                itemAdapter.notifyItemRangeChanged(position, listOfItem.size)
+                itemAdapter.notifyDataSetChanged()
             }
         }
     }

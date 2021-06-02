@@ -2,9 +2,12 @@
 
 package com.example.kotlinfistapp
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     var btnOk: Button? = null
     var checkBox: CheckBox? = null
     var etPseudo: EditText? = null
+    var etMdp: EditText? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnOk = findViewById(R.id.button)
         checkBox = findViewById(R.id.checkBox)
         etPseudo = findViewById(R.id.pseudo)
+        etMdp = findViewById(R.id.edtmdp)
         btnOk?.setOnClickListener(this)
         findViewById<View>(R.id.pseudo).setOnClickListener(this)
         checkBox?.setOnClickListener(this)
@@ -53,11 +58,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.menu_settings) {
-            val myToast: Toast
-            myToast = Toast.makeText(this, "preference", Toast.LENGTH_LONG)
+            val myToast: Toast = Toast.makeText(this, "preference", Toast.LENGTH_LONG)
             myToast.show()
-            val toPrefAct: Intent
-            toPrefAct = Intent(this@MainActivity, GestionPreferences::class.java)
+            val toPrefAct: Intent = Intent(this@MainActivity, GestionPreferences::class.java)
             startActivity(toPrefAct)
         }
         if(id == R.id.menu_network){
@@ -82,6 +85,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        btnOk!!.isEnabled = verifReseau()
         Log.d(TAG, "OnResume")
     }
 
@@ -94,10 +98,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val myToast: Toast
         when (v.id) {
             R.id.checkBox -> {
-                myToast = Toast.makeText(this, "CheckBox", Toast.LENGTH_LONG)
-                myToast.show()
                 editor!!.putBoolean("remember", checkBox!!.isChecked)
-                Log.d(TAG, "" + checkBox!!.isChecked)
                 editor!!.commit()
                 if (!checkBox!!.isChecked) {
                     editor!!.putString("login", "")
@@ -109,29 +110,44 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     editor!!.putString("login", etPseudo!!.text.toString())
                     editor!!.commit()
                 }
-                Log.d("PMRMoi","test")
                 activityScope.launch {
                     try {
-                        val hash : String = DataProvider.authenticate()
+                        val hash : String = DataProvider.authenticate(etPseudo!!.text.toString(),etMdp!!.text.toString())
+                        editor!!.putString("hash", hash)
                         Log.d(TAG,hash)
-                        val listsOfUser : List<ProfilListeToDo> = DataProvider.getUsersFromAPI(hash)
-                        Log.d(TAG,listsOfUser.toString())
+                        editor!!.commit()
+                        val bundle = Bundle()
+                        bundle.putString("pseudo", etPseudo!!.text.toString())
+                        val toSecondAct: Intent = Intent(this@MainActivity, ChoixListActivity::class.java)
+                        toSecondAct.putExtras(bundle)
+                        startActivity(toSecondAct)
                     } catch (e: Exception) {
                         Log.d(TAG,e.toString())
                     }
                 }
-                val bundle = Bundle()
-                bundle.putString("pseudo", etPseudo!!.text.toString())
-               /* val toSecondAct: Intent
-                toSecondAct = Intent(this@MainActivity, ChoixListActivity::class.java)
-                toSecondAct.putExtras(bundle)
-                startActivity(toSecondAct)*/
-            }
-            R.id.pseudo -> {
-                myToast = Toast.makeText(this, "pseudo", Toast.LENGTH_LONG)
-                myToast.show()
             }
         }
+    }
+    private fun verifReseau(): Boolean {
+        // On vérifie si le réseau est disponible,
+        // si oui on change le statut du bouton de connexion
+        val cnMngr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cnMngr.activeNetworkInfo
+        var sType = "Aucun réseau détecté"
+        var bStatut = false
+        if (netInfo != null) {
+            val netState = netInfo.state
+            if (netState.compareTo(NetworkInfo.State.CONNECTED) == 0) {
+                bStatut = true
+                val netType = netInfo.type
+                when (netType) {
+                    ConnectivityManager.TYPE_MOBILE -> sType = "Réseau mobile détecté"
+                    ConnectivityManager.TYPE_WIFI -> sType = "Réseau wifi détecté"
+                }
+            }
+        }
+
+        return bStatut
     }
 
     companion object {

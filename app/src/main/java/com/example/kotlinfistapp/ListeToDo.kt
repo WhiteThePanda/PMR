@@ -4,9 +4,15 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 class ListeToDo(var title : String) : Serializable {
+    @SerializedName("label")
     private var titreListeToDo : String = title
-    @SerializedName("items")
     private var lesItems : MutableList<ItemToDo> = mutableListOf()
+    public var id : String =""
+
+    public fun GetId() : String{
+        return id
+    }
+
     override fun toString(): String {
         return "ToDoList(_title='$titreListeToDo')"
     }

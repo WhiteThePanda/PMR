@@ -6,4 +6,6 @@
     <string name="defaultPseudo">Inconnu</string>
     <string name="inputList">Nouvelle Liste</string>
     <string name="inputItem">Nouveau Item</string>
+    <string name="mdp">mot de passe</string>
+    <string name="url">http://tomnab.fr/todo-api/</string>
 </resources>

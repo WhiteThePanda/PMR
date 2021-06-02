@@ -23,6 +23,7 @@ class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+
         val t = Toast.makeText(this, "click cb :$newValue", Toast.LENGTH_SHORT)
         t.show()
         if (newValue == false) {

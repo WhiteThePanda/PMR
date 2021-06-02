@@ -1,4 +1,5 @@
 package com.example.kotlinfistapp
+import android.util.Log
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,12 +14,27 @@ object DataProvider {
         .build()
     private val service = retrofit.create(ToDoService::class.java)
 
-    suspend fun getUsersFromAPI(hash : String): List<ProfilListeToDo> {
-        return service.getUsers(hash).users
+    suspend fun getUsersFromAPI(hash : String): MutableList<ProfilListeToDo> {
+        return service.getUsers(hash).users.toMutableList()
     }
-    suspend fun authenticate(): String
+    suspend fun getListsOfTheUserFromAPI(hash : String): MutableList<ListeToDo> {
+        return service.getListsOfTheUser(hash).lists.toMutableList()
+    }
+    suspend fun authenticate(pseudo : String,mdp :String): String
     {
-        return service.authenticate().hash
+        return service.authenticate(pseudo,mdp).hash
+    }
+    suspend fun getItemOfTheList(id : String,hash: String) : MutableList<ItemToDo>
+    {
+        return service.getItemOfTheList(id,hash).items.toMutableList()
+    }
+    suspend fun addItemInTheList(id:String,label : String,hash: String)
+    {
+        service.addItemInList(id,label,hash)
+    }
+    suspend fun changeItemInTheList(idList : String, idItem : String , checked : String, hash : String)
+    {
+        service.changeItemInList(idList,idItem,checked,hash)
     }
     public fun refreshURL(newUrl : String)
     {

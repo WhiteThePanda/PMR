@@ -10,14 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class ListRecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class ListRecyclerAdapter(private val actionListener: ChoixListActivity) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     var items : List<ListeToDo> = ArrayList()
-    var mContext = context
-    lateinit var username : String
-    fun initData(currentProfilListeToDo : ProfilListeToDo)
+    fun initData(mesListes : List<ListeToDo>)
     {
-        items = currentProfilListeToDo.GetMesListesToDo()
-        username = currentProfilListeToDo.name
+        items = mesListes
     }
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.todolist_item,p0,false)
@@ -25,6 +22,7 @@ class ListRecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.
     }
 
     override fun getItemCount(): Int {
+        Log.d("PMRMoi",items.size.toString())
         return items.size
     }
 
@@ -32,24 +30,27 @@ class ListRecyclerAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.
         when(holder)
         {
             is ListViewHolder ->{
-                holder.parentLayout.setOnClickListener{
-                    val toItemAct: Intent
-                    Log.d("PMRMoi",position.toString())
-                    toItemAct = Intent(mContext, ShowListActivity::class.java)
-                    toItemAct.putExtra("name",username)
-                    toItemAct.putExtra("position",position)
-                    mContext.startActivity(toItemAct)
-                }
                 holder.bind(items.get(position))
             }
         }
     }
 
-    class ListViewHolder constructor(itemView : View):RecyclerView.ViewHolder(itemView){
+    inner class ListViewHolder constructor(itemView : View):RecyclerView.ViewHolder(itemView){
         val titletextView : TextView = itemView.findViewById<TextView>(R.id.titleOfList)
-        val parentLayout : ConstraintLayout = itemView.findViewById(R.id.parent_layout)
+        init {
+            itemView.setOnClickListener{
+                val itemPosition = adapterPosition
+                if (itemPosition != RecyclerView.NO_POSITION) {
+                    val clickedItem = items[itemPosition]
+                    actionListener.onItemClicked(itemPosition)
+                }
+            }
+        }
         fun bind(toDoList: ListeToDo){
             titletextView.text = toDoList.GetTitreListeToDo()
         }
+    }
+    interface ActionListener {
+        fun onItemClicked(position: Int)
     }
 }
