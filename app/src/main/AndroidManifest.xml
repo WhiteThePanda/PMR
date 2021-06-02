@@ -21,6 +21,7 @@
         <activity android:name=".ChoixListActivity"></activity>
         <activity android:name=".GestionPreferences"></activity>
         <activity android:name=".ShowListActivity"></activity>
+        <activity android:name=".Reseau"></activity>
     </application>
 
 </manifest>

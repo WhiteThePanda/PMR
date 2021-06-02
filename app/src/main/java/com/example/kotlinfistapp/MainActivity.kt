@@ -16,9 +16,16 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private val activityScope = CoroutineScope(IO)
     var sp: SharedPreferences? = null
     var editor: Editor? = null
     var btnOk: Button? = null
@@ -52,6 +59,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val toPrefAct: Intent
             toPrefAct = Intent(this@MainActivity, GestionPreferences::class.java)
             startActivity(toPrefAct)
+        }
+        if(id == R.id.menu_network){
+            val iReseau = Intent(this, Reseau::class.java)
+            startActivity(iReseau)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -97,6 +108,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 if (checkBox!!.isChecked) {
                     editor!!.putString("login", etPseudo!!.text.toString())
                     editor!!.commit()
+                }
+                Log.d("PMRMoi","test")
+                activityScope.launch {
+                    try {
+                        val users = DataProvider.getUsersFromAPI()
+                        Log.d(TAG,"test")
+                        Log.d(TAG,users.toString())
+                    } catch (e: Exception) {
+                        Log.d(TAG,e.toString())
+                    }
                 }
                 val bundle = Bundle()
                 bundle.putString("pseudo", etPseudo!!.text.toString())

@@ -1,10 +1,13 @@
 package com.example.kotlinfistapp
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
 class ProfilListeToDo(var name: String):Serializable {
+    @SerializedName("user")
     private var _login : String = ""
+    @SerializedName("lists")
     private var mesListesToDo : MutableList<ListeToDo> = mutableListOf<ListeToDo>()
 
     init {

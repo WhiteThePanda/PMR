@@ -51,6 +51,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener{
                 listOfItem = profilListeToDo.GetMesListesToDo()[position].GetLesItems()
             }
         }
+        Log.d("PMRMoi",listOfItem.toString())
         itemAdapter= ItemRecyclerAdapter(this,dataset,username,position)
         recyclerView.adapter = itemAdapter
     }
