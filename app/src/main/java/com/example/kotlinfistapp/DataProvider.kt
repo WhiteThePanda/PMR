@@ -15,6 +15,10 @@ object DataProvider {
     suspend fun getUsersFromAPI(): List<ProfilListeToDo> {
         return service.getUsers().profilListesToDo
     }
+    suspend fun authenticate(): String
+    {
+        return service.authenticate()
+    }
     public fun refreshURL(newUrl : String)
     {
         BASE_URL=newUrl
