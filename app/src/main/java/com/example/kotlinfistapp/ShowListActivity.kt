@@ -22,6 +22,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     var editor: SharedPreferences.Editor? = null
     var edtItem : EditText?= null
     var id : String = ""
+    var APIBool : Boolean = true;
     lateinit var itemAdapter : ItemRecyclerAdapter
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
     lateinit var recyclerView : RecyclerView
@@ -48,6 +49,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         withContext(Main){
             itemAdapter= ItemRecyclerAdapter(this@ShowListActivity,listOfItem)
             recyclerView.adapter = itemAdapter
+            APIBool = false;
         }
     }
     override fun onClick(v: View) {
@@ -69,19 +71,25 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     }
 
     override fun onItemClicked(position: Int) {
-        Log.d("PMRMoi",listOfItem[position].faitText)
-        activityScope.launch {
-            val hash = sp?.getString("hash","")
-            var value : String = "0"
-            if(listOfItem[position].faitText=="0")value = "1"
-            DataProvider.changeItemInTheList(id,listOfItem[position].id,value,hash.toString())
-            val temp = DataProvider.getItemOfTheList(id, hash.toString())
-            withContext(Main)
-            {
-                listOfItem.clear()
-                listOfItem.addAll(temp)
-                itemAdapter.notifyItemRangeChanged(position, listOfItem.size)
-                itemAdapter.notifyDataSetChanged()
+        if(!APIBool)
+        {
+            APIBool = true;
+            Log.d("PMRMoi",listOfItem[position].faitText)
+            activityScope.launch {
+
+                val hash = sp?.getString("hash","")
+                var value : String = "0"
+                if(listOfItem[position].faitText=="0")value = "1"
+                DataProvider.changeItemInTheList(id,listOfItem[position].id,value,hash.toString())
+                val temp = DataProvider.getItemOfTheList(id, hash.toString())
+                withContext(Main)
+                {
+                    listOfItem.clear()
+                    listOfItem.addAll(temp)
+                    itemAdapter.notifyItemRangeChanged(position, listOfItem.size)
+                    itemAdapter.notifyDataSetChanged()
+                    APIBool=false;
+                }
             }
         }
     }
