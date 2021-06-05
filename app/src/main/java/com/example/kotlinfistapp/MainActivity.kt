@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     var checkBox: CheckBox? = null
     var etPseudo: EditText? = null
     var etMdp: EditText? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,7 +75,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "OnStart")
+
+        // Permet de réinitialiser l'url par défaut dans les préférences partagées.
+
         val cbR = sp!!.getBoolean("remember", true)
+        editor!!.putString("urlData", getString(R.string.url))
+        editor!!.commit()
+
         checkBox!!.isChecked = cbR
         if (checkBox!!.isChecked) {
             val l = sp!!.getString("login", getString(R.string.defaultPseudo))
@@ -95,7 +103,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        val myToast: Toast
+        val myToast = Toast.makeText(this, "Vérifiez l'url ou les identifiants de connexion.", Toast.LENGTH_SHORT)
+
         when (v.id) {
             R.id.checkBox -> {
                 editor!!.putBoolean("remember", checkBox!!.isChecked)
@@ -122,6 +131,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         toSecondAct.putExtras(bundle)
                         startActivity(toSecondAct)
                     } catch (e: Exception) {
+                        myToast.show()
                         Log.d(TAG,e.toString())
                     }
                 }

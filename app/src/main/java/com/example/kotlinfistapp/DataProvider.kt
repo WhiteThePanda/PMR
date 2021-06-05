@@ -1,4 +1,8 @@
 package com.example.kotlinfistapp
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import android.provider.Settings.Global.getString
 import android.util.Log
 import retrofit2.Callback
 import retrofit2.Retrofit
@@ -12,7 +16,9 @@ object DataProvider {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val service = retrofit.create(ToDoService::class.java)
+
+
+    private var service = retrofit.create(ToDoService::class.java)
 
     suspend fun getUsersFromAPI(hash : String): MutableList<ProfilListeToDo> {
         return service.getUsers(hash).users.toMutableList()
@@ -36,13 +42,15 @@ object DataProvider {
     {
         service.changeItemInList(idList,idItem,checked,hash)
     }
+
     public fun refreshURL(newUrl : String)
     {
-        BASE_URL=newUrl
+        BASE_URL = newUrl
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+        service = retrofit.create(ToDoService::class.java)
     }
 
 }
