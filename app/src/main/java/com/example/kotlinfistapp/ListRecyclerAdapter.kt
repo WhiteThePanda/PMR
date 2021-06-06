@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class ListRecyclerAdapter(private val actionListener: ChoixListActivity) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class ListRecyclerAdapter(private val actionListener: ActionListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     var items : List<ListeToDo> = ArrayList()
     fun initData(mesListes : List<ListeToDo>)
     {
