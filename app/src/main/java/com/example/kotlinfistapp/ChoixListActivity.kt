@@ -36,7 +36,10 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener,ListRecycler
         sp = PreferenceManager.getDefaultSharedPreferences(this)
         edtList = findViewById(R.id.newList)
         editor = sp?.edit()
+        recyclerView = findViewById<RecyclerView>(R.id.listRecyclerView)
+        recyclerView.layoutManager=LinearLayoutManager(this)
         listAdapter = ListRecyclerAdapter(this)
+        recyclerView.adapter = listAdapter
         findViewById<Button>(R.id.buttonCreateList).setOnClickListener(this)
         updateData()
     }
@@ -63,10 +66,8 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener,ListRecycler
     }
     private fun RefreshRecycler()
     {
-        recyclerView = findViewById<RecyclerView>(R.id.listRecyclerView)
-        recyclerView.layoutManager=LinearLayoutManager(this)
         listAdapter?.initData(mesListes)
-        recyclerView.adapter = listAdapter
+        listAdapter.notifyDataSetChanged()
     }
     override fun onClick(v: View) {
         when (v.id) {

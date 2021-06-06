@@ -23,7 +23,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     var edtItem : EditText?= null
     var id : String = ""
     var APIBool : Boolean = true;
-    lateinit var itemAdapter : ItemRecyclerAdapter
+    private lateinit var itemAdapter : ItemRecyclerAdapter
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
     lateinit var recyclerView : RecyclerView
     private val activityScope = CoroutineScope(Dispatchers.IO)
@@ -36,6 +36,8 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         findViewById<Button>(R.id.buttonCreateItem).setOnClickListener(this)
         recyclerView = findViewById<RecyclerView>(R.id.itemRecyclerView)
         recyclerView.layoutManager= LinearLayoutManager(this)
+        itemAdapter= ItemRecyclerAdapter(this@ShowListActivity,listOfItem)
+        recyclerView.adapter = itemAdapter
         id = this.intent.getStringExtra("id").toString()
         activityScope.launch {
             val hash = sp?.getString("hash","")
@@ -47,23 +49,27 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     private suspend fun RefreshRecyclerOnMainThread()
     {
         withContext(Main){
-            itemAdapter= ItemRecyclerAdapter(this@ShowListActivity,listOfItem)
-            recyclerView.adapter = itemAdapter
+            itemAdapter.notifyDataSetChanged()
             APIBool = false;
         }
     }
     override fun onClick(v: View) {
         when (v.id) {
             R.id.buttonCreateItem -> {
-                activityScope.launch {
-                    val hash = sp?.getString("hash","")
-                    DataProvider.addItemInTheList(id,edtItem?.text.toString(),hash.toString())
-                    listOfItem.clear()
-                    listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
-                    withContext(Main)
-                    {
-                        Log.d("PMRMoi","test")
-                        itemAdapter?.notifyDataSetChanged()
+                if(!APIBool)
+                {
+                    APIBool = true;
+                    activityScope.launch {
+                        val hash = sp?.getString("hash","")
+                        DataProvider.addItemInTheList(id,edtItem?.text.toString(),hash.toString())
+                        listOfItem.clear()
+                        listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
+                        withContext(Main)
+                        {
+                            Log.d("PMRMoi","test")
+                            itemAdapter?.notifyDataSetChanged()
+                            APIBool=false;
+                        }
                     }
                 }
             }
