@@ -42,7 +42,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         activityScope.launch {
             val hash = sp?.getString("hash","")
             Log.d("PMRMoi", id)
-            listOfItem = DataProvider.getItemOfTheList(id, hash.toString())
+            listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
             RefreshRecyclerOnMainThread()
         }
     }
