@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnOk?.setOnClickListener(this)
         findViewById<View>(R.id.pseudo).setOnClickListener(this)
         checkBox?.setOnClickListener(this)
+        editor!!.putString("urlData", getString(R.string.url))
+        editor!!.commit()
         Log.d(TAG, "OnCreate")
     }
 
@@ -79,8 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // Permet de réinitialiser l'url par défaut dans les préférences partagées.
 
         val cbR = sp!!.getBoolean("remember", true)
-        editor!!.putString("urlData", getString(R.string.url))
-        editor!!.commit()
+
 
         checkBox!!.isChecked = cbR
         if (checkBox!!.isChecked) {
