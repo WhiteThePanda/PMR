@@ -6,7 +6,7 @@ import com.example.kotlinfistapp.data.model.ListeToDo
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RemoteDataSource {
+class RemoteDataSource {
 
     private var BASE_URL = "http://tomnab.fr/todo-api/"
 

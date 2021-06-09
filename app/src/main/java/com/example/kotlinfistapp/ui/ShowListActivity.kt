@@ -15,11 +15,13 @@ import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.ui.adapter.ItemRecyclerAdapter
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.R
+import com.example.kotlinfistapp.data.source.ToDoRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 
 
 class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecyclerAdapter.ActionListener {
+
     var sp: SharedPreferences? = null
     var editor: SharedPreferences.Editor? = null
     var edtItem : EditText?= null
@@ -29,6 +31,9 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
     lateinit var recyclerView : RecyclerView
     private val activityScope = CoroutineScope(Dispatchers.IO)
+    private val toDoRepository by lazy {ToDoRepository.newInstance(application)}
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.show_list_activity)
@@ -44,7 +49,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         activityScope.launch {
             val hash = sp?.getString("hash","")
             Log.d("PMRMoi", id)
-            listOfItem.addAll(RemoteDataSource.getItemOfTheList(id, hash.toString()))
+            listOfItem.addAll(toDoRepository.getItemOfTheList(id, hash.toString()))
             RefreshRecyclerOnMainThread()
         }
     }
@@ -63,9 +68,9 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                     APIBool = true;
                     activityScope.launch {
                         val hash = sp?.getString("hash","")
-                        RemoteDataSource.addItemInTheList(id, edtItem?.text.toString(), hash.toString())
+                        toDoRepository.addItemInTheList(id, edtItem?.text.toString(), hash.toString())
                         listOfItem.clear()
-                        listOfItem.addAll(RemoteDataSource.getItemOfTheList(id, hash.toString()))
+                        listOfItem.addAll(toDoRepository.getItemOfTheList(id, hash.toString()))
                         withContext(Main)
                         {
                             Log.d("PMRMoi","test")
@@ -88,8 +93,8 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                 val hash = sp?.getString("hash","")
                 var value : String = "0"
                 if(listOfItem[position].faitText=="0")value = "1"
-                RemoteDataSource.changeItemInTheList(id, listOfItem[position].id, value, hash.toString())
-                val temp = RemoteDataSource.getItemOfTheList(id, hash.toString())
+                toDoRepository.changeItemInTheList(id, listOfItem[position].id, value, hash.toString())
+                val temp = toDoRepository.getItemOfTheList(id, hash.toString())
                 withContext(Main)
                 {
                     listOfItem.clear()

@@ -9,15 +9,20 @@ import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import java.lang.Exception
 
 class ToDoRepository(
-    private val hash: String,
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
     )
 
 {
+
+    suspend fun authenticate(pseudo:String, mdp:String) : String
+    {
+        return remoteDataSource.authenticate(pseudo, mdp)
+    }
+
     //Récupérer les listes de l'utilisateur connecté
     //Update la DB en conséquence
-    suspend fun getListsOfTheUserFromAPI(): List<ListeToDo> {
+    suspend fun getListsOfTheUserFromAPI(hash:String): List<ListeToDo> {
         return try {
             remoteDataSource.getListsOfTheUserFromAPI(hash).also {
                 localDataSource.saveOrUpdateLists(it)
@@ -31,7 +36,7 @@ class ToDoRepository(
     //Récupérer les items de la liste choisie par l'utilisateur (id)
     //Update la DB en conséquence
 
-    suspend fun getItemOfTheList(id : String): List<ItemToDo> {
+    suspend fun getItemOfTheList(id : String, hash: String): List<ItemToDo> {
         return try {
             remoteDataSource.getItemOfTheList(id, hash).also {
                 localDataSource.saveOrUpdateItems(it)
@@ -42,10 +47,13 @@ class ToDoRepository(
         }
     }
 
+    fun changeItemInTheList(id: String, id1: String, value: String, toString: String) {
+
+    }
 
     companion object {
-        fun newInstance(application: Application): PostRepository {
-            return PostRepository(
+        fun newInstance(application: Application): ToDoRepository {
+            return ToDoRepository(
                 localDataSource = LocalDataSource(application),
                 remoteDataSource = RemoteDataSource()
             )

@@ -21,6 +21,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.R
+import com.example.kotlinfistapp.data.source.ToDoRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     var checkBox: CheckBox? = null
     var etPseudo: EditText? = null
     var etMdp: EditText? = null
-
+    private val toDoRepository by lazy { ToDoRepository.newInstance(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 activityScope.launch {
                     try {
-                        val hash : String = RemoteDataSource.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
+                        val hash : String = toDoRepository.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
                         editor!!.putString("hash", hash)
                         Log.d(TAG,hash)
                         editor!!.commit()
