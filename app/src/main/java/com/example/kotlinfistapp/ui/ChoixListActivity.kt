@@ -15,7 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.example.kotlinfistapp.*
 import com.example.kotlinfistapp.data.model.ListeToDo
-import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.ui.adapter.ListRecyclerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +53,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
         activityScope.launch {
             try {
                 val hash = sp?.getString("hash","")
-                mesListes = DataProvider.getListsOfTheUserFromAPI(hash!!)
+                mesListes = RemoteDataSource.getListsOfTheUserFromAPI(hash!!)
                 RefreshRecyclerOnMainThread()
                 Log.d("PMRMoi",mesListes.toString())
             } catch (e: Exception) {

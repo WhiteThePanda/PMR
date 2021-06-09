@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.ui.adapter.ItemRecyclerAdapter
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.R
@@ -44,7 +44,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         activityScope.launch {
             val hash = sp?.getString("hash","")
             Log.d("PMRMoi", id)
-            listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
+            listOfItem.addAll(RemoteDataSource.getItemOfTheList(id, hash.toString()))
             RefreshRecyclerOnMainThread()
         }
     }
@@ -63,9 +63,9 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                     APIBool = true;
                     activityScope.launch {
                         val hash = sp?.getString("hash","")
-                        DataProvider.addItemInTheList(id, edtItem?.text.toString(), hash.toString())
+                        RemoteDataSource.addItemInTheList(id, edtItem?.text.toString(), hash.toString())
                         listOfItem.clear()
-                        listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
+                        listOfItem.addAll(RemoteDataSource.getItemOfTheList(id, hash.toString()))
                         withContext(Main)
                         {
                             Log.d("PMRMoi","test")
@@ -88,8 +88,8 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                 val hash = sp?.getString("hash","")
                 var value : String = "0"
                 if(listOfItem[position].faitText=="0")value = "1"
-                DataProvider.changeItemInTheList(id, listOfItem[position].id, value, hash.toString())
-                val temp = DataProvider.getItemOfTheList(id, hash.toString())
+                RemoteDataSource.changeItemInTheList(id, listOfItem[position].id, value, hash.toString())
+                val temp = RemoteDataSource.getItemOfTheList(id, hash.toString())
                 withContext(Main)
                 {
                     listOfItem.clear()

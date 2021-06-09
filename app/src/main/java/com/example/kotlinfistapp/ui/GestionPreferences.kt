@@ -11,7 +11,7 @@ import android.preference.PreferenceActivity
 import android.util.Log
 import android.widget.Toast
 import com.example.kotlinfistapp.R
-import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 
 
 class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {
@@ -36,7 +36,7 @@ class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {
             edtURLAPI -> {
                 try {
                     Log.i("URLAPI", newValue.toString())
-                    DataProvider.refreshURL(newValue.toString())
+                    RemoteDataSource.refreshURL(newValue.toString())
                 }
                 catch(e : java.lang.IllegalArgumentException){
                     Toast.makeText(this, "mauvaise url", Toast.LENGTH_SHORT).show()

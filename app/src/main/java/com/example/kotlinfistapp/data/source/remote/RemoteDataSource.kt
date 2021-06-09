@@ -6,7 +6,7 @@ import com.example.kotlinfistapp.data.model.ListeToDo
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object DataProvider {
+object RemoteDataSource {
 
     private var BASE_URL = "http://tomnab.fr/todo-api/"
 
@@ -21,13 +21,16 @@ object DataProvider {
     suspend fun getUsersFromAPI(hash : String): MutableList<ProfilListeToDo> {
         return service.getUsers(hash).users.toMutableList()
     }
-    suspend fun getListsOfTheUserFromAPI(hash : String): MutableList<ListeToDo> {
-        return service.getListsOfTheUser(hash).lists.toMutableList()
-    }
+
     suspend fun authenticate(pseudo : String,mdp :String): String
     {
         return service.authenticate(pseudo,mdp).hash
     }
+
+    suspend fun getListsOfTheUserFromAPI(hash : String): MutableList<ListeToDo> {
+        return service.getListsOfTheUser(hash).lists.toMutableList()
+    }
+
     suspend fun getItemOfTheList(id : String,hash: String) : MutableList<ItemToDo>
     {
         return service.getItemOfTheList(id,hash).items.toMutableList()

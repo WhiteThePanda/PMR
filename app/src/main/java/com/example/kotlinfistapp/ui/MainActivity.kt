@@ -19,7 +19,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
-import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 activityScope.launch {
                     try {
-                        val hash : String = DataProvider.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
+                        val hash : String = RemoteDataSource.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
                         editor!!.putString("hash", hash)
                         Log.d(TAG,hash)
                         editor!!.commit()
