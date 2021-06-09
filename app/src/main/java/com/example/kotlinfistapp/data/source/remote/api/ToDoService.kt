@@ -1,6 +1,6 @@
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.data.source.remote.api
 
-import android.telecom.Call
+import com.example.kotlinfistapp.data.source.remote.api.APIResponse
 import retrofit2.http.*
 
 

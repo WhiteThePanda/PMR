@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.ui
 
 import android.content.Context
 import android.content.Intent
@@ -19,10 +19,10 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.R
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 activityScope.launch {
                     try {
-                        val hash : String = DataProvider.authenticate(etPseudo!!.text.toString(),etMdp!!.text.toString())
+                        val hash : String = DataProvider.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
                         editor!!.putString("hash", hash)
                         Log.d(TAG,hash)
                         editor!!.commit()

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.ui
 
 import android.os.Bundle
 import android.preference.CheckBoxPreference
@@ -8,10 +8,10 @@ import android.preference.EditTextPreference
 import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
 import android.preference.PreferenceActivity
-import android.provider.ContactsContract
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
+import com.example.kotlinfistapp.R
+import com.example.kotlinfistapp.data.source.remote.DataProvider
 
 
 class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {

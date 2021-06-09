@@ -1,5 +1,6 @@
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.data.model
 
+import com.example.kotlinfistapp.data.model.ItemToDo
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 

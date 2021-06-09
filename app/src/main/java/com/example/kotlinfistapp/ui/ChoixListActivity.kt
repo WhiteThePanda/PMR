@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,6 +13,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.example.kotlinfistapp.*
+import com.example.kotlinfistapp.data.model.ListeToDo
+import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.ui.adapter.ListRecyclerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
@@ -20,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ChoixListActivity : AppCompatActivity(), View.OnClickListener,ListRecyclerAdapter.ActionListener{
+class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecyclerAdapter.ActionListener {
     private val activityScope = CoroutineScope(Dispatchers.IO)
     var sp: SharedPreferences? = null
     var editor: SharedPreferences.Editor? = null

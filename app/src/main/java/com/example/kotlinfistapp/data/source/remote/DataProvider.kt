@@ -1,10 +1,8 @@
-package com.example.kotlinfistapp
-import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import android.provider.Settings.Global.getString
-import android.util.Log
-import retrofit2.Callback
+package com.example.kotlinfistapp.data.source.remote
+import com.example.kotlinfistapp.data.source.remote.api.ToDoService
+import com.example.kotlinfistapp.data.model.ProfilListeToDo
+import com.example.kotlinfistapp.data.model.ItemToDo
+import com.example.kotlinfistapp.data.model.ListeToDo
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

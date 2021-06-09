@@ -1,22 +1,15 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.ui.adapter
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.kotlinfistapp.data.model.ItemToDo
+import com.example.kotlinfistapp.R
 
 class ItemRecyclerAdapter(private val actionListener: ActionListener, _items : List<ItemToDo>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     var items : List<ItemToDo> = _items

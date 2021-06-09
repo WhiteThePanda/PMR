@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.kotlinfistapp
+package com.example.kotlinfistapp.ui
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -11,13 +11,15 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListAdapter
-import com.google.gson.Gson
+import com.example.kotlinfistapp.data.source.remote.DataProvider
+import com.example.kotlinfistapp.ui.adapter.ItemRecyclerAdapter
+import com.example.kotlinfistapp.data.model.ItemToDo
+import com.example.kotlinfistapp.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 
 
-class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecyclerAdapter.ActionListener{
+class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecyclerAdapter.ActionListener {
     var sp: SharedPreferences? = null
     var editor: SharedPreferences.Editor? = null
     var edtItem : EditText?= null
@@ -36,7 +38,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         findViewById<Button>(R.id.buttonCreateItem).setOnClickListener(this)
         recyclerView = findViewById<RecyclerView>(R.id.itemRecyclerView)
         recyclerView.layoutManager= LinearLayoutManager(this)
-        itemAdapter= ItemRecyclerAdapter(this@ShowListActivity,listOfItem)
+        itemAdapter= ItemRecyclerAdapter(this@ShowListActivity, listOfItem)
         recyclerView.adapter = itemAdapter
         id = this.intent.getStringExtra("id").toString()
         activityScope.launch {
@@ -61,7 +63,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                     APIBool = true;
                     activityScope.launch {
                         val hash = sp?.getString("hash","")
-                        DataProvider.addItemInTheList(id,edtItem?.text.toString(),hash.toString())
+                        DataProvider.addItemInTheList(id, edtItem?.text.toString(), hash.toString())
                         listOfItem.clear()
                         listOfItem.addAll(DataProvider.getItemOfTheList(id, hash.toString()))
                         withContext(Main)
@@ -86,7 +88,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                 val hash = sp?.getString("hash","")
                 var value : String = "0"
                 if(listOfItem[position].faitText=="0")value = "1"
-                DataProvider.changeItemInTheList(id,listOfItem[position].id,value,hash.toString())
+                DataProvider.changeItemInTheList(id, listOfItem[position].id, value, hash.toString())
                 val temp = DataProvider.getItemOfTheList(id, hash.toString())
                 withContext(Main)
                 {
