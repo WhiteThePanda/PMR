@@ -34,7 +34,6 @@ class LocalDataSource(
     }
 
     fun changeItemInTheList(idList: String, idItem: String, checked: String) {
-
     }
 
     fun addItemInTheList(id: String, label: String) {
