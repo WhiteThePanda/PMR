@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.example.kotlinfistapp.*
 import com.example.kotlinfistapp.data.model.ListeToDo
+import com.example.kotlinfistapp.data.source.ToDoRepository
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.ui.adapter.ListRecyclerAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
     lateinit var mesListes : MutableList<ListeToDo>
     lateinit var listAdapter : ListRecyclerAdapter
     lateinit var recyclerView : RecyclerView
-
+    private val toDoRepository by lazy { ToDoRepository.newInstance(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +54,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
         activityScope.launch {
             try {
                 val hash = sp?.getString("hash","")
-                mesListes = RemoteDataSource.getListsOfTheUserFromAPI(hash!!)
+                mesListes = toDoRepository.getListsOfTheUserFromAPI(hash!!)
                 RefreshRecyclerOnMainThread()
                 Log.d("PMRMoi",mesListes.toString())
             } catch (e: Exception) {

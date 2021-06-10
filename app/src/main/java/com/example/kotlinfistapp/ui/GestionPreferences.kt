@@ -11,6 +11,7 @@ import android.preference.PreferenceActivity
 import android.util.Log
 import android.widget.Toast
 import com.example.kotlinfistapp.R
+import com.example.kotlinfistapp.data.source.ToDoRepository
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 
 
@@ -18,6 +19,8 @@ class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {
     var cbp: CheckBoxPreference? = null
     var edtpl: EditTextPreference? = null
     var edtURLAPI : EditTextPreference? = null
+    private val toDoRepository by lazy { ToDoRepository.newInstance(application) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
@@ -36,7 +39,7 @@ class GestionPreferences : PreferenceActivity(), OnPreferenceChangeListener {
             edtURLAPI -> {
                 try {
                     Log.i("URLAPI", newValue.toString())
-                    RemoteDataSource.refreshURL(newValue.toString())
+                    toDoRepository.refreshURL(newValue.toString())
                 }
                 catch(e : java.lang.IllegalArgumentException){
                     Toast.makeText(this, "mauvaise url", Toast.LENGTH_SHORT).show()

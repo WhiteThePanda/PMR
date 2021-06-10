@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     var checkBox: CheckBox? = null
     var etPseudo: EditText? = null
     var etMdp: EditText? = null
+
     private val toDoRepository by lazy { ToDoRepository.newInstance(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

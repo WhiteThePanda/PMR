@@ -14,6 +14,10 @@ class ToDoRepository(
     )
 
 {
+    public fun refreshURL(newValue:String)
+    {
+        return remoteDataSource.refreshURL(newValue)
+    }
 
     suspend fun authenticate(pseudo:String, mdp:String) : String
     {
@@ -22,7 +26,7 @@ class ToDoRepository(
 
     //Récupérer les listes de l'utilisateur connecté
     //Update la DB en conséquence
-    suspend fun getListsOfTheUserFromAPI(hash:String): List<ListeToDo> {
+    suspend fun getListsOfTheUserFromAPI(hash:String): MutableList<ListeToDo> {
         return try {
             remoteDataSource.getListsOfTheUserFromAPI(hash).also {
                 localDataSource.saveOrUpdateLists(it)
@@ -48,7 +52,11 @@ class ToDoRepository(
     }
 
     fun changeItemInTheList(id: String, id1: String, value: String, toString: String) {
+        TODO()
+    }
 
+    fun addItemInTheList(id: String, toString: String, toString1: String) {
+        TODO()
     }
 
     companion object {
