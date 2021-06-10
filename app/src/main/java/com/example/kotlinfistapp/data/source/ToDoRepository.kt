@@ -51,12 +51,28 @@ class ToDoRepository(
         }
     }
 
-    fun changeItemInTheList(id: String, id1: String, value: String, toString: String) {
-        TODO()
+    //Coche ou décoche un item
+    //Update la DB en conséquence
+    suspend fun changeItemInTheList(idList : String, idItem : String , checked : String, hash : String) {
+        return try {
+            remoteDataSource.changeItemInTheList(idList, idItem, checked, hash).also {
+                localDataSource.saveOrUpdateItemInTheList(it)
+            }
+        } catch (e: Exception) {
+            localDataSource.changeItemInTheList(idList, idItem, checked)
+        }
     }
 
-    fun addItemInTheList(id: String, toString: String, toString1: String) {
-        TODO()
+    //Ajoute un item dans la liste
+    //Update la DB en conséquence
+    suspend fun addItemInTheList(id:String,label : String,hash: String) {
+        return try {
+            remoteDataSource.addItemInTheList(id,label,hash).also {
+                localDataSource.saveOrUpdateItemInTheList(it)
+            }
+        } catch (e: Exception) {
+            localDataSource.addItemInTheList(id, label)
+        }
     }
 
     companion object {
