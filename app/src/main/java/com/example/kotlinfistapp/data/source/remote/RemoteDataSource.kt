@@ -37,11 +37,11 @@ class RemoteDataSource {
     }
     suspend fun addItemInTheList(id:String,label : String,hash: String)
     {
-        service.addItemInList(id,label,hash)
+         service.addItemInList(id,label,hash)
     }
     suspend fun changeItemInTheList(idList : String, idItem : String , checked : String, hash : String)
     {
-        service.changeItemInList(idList,idItem,checked,hash)
+         service.changeItemInList(idList,idItem,checked,hash)
     }
 
     public fun refreshURL(newUrl : String)

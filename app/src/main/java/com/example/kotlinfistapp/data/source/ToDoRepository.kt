@@ -3,7 +3,6 @@ package com.example.kotlinfistapp.data.source
 import android.app.Application
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
-import com.example.kotlinfistapp.data.model.ProfilListeToDo
 import com.example.kotlinfistapp.data.source.local.LocalDataSource
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import java.lang.Exception
@@ -33,7 +32,7 @@ class ToDoRepository(
             }
 
         } catch (e: Exception) {
-            localDataSource.getListsOfTheUserFromAPI()
+            localDataSource.getListsOfTheUser()
         }
     }
 
@@ -56,7 +55,7 @@ class ToDoRepository(
     suspend fun changeItemInTheList(idList : String, idItem : String , checked : String, hash : String) {
         return try {
             remoteDataSource.changeItemInTheList(idList, idItem, checked, hash).also {
-                localDataSource.saveOrUpdateItemInTheList(it)
+                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(idList,hash))
             }
         } catch (e: Exception) {
             localDataSource.changeItemInTheList(idList, idItem, checked)
@@ -66,9 +65,11 @@ class ToDoRepository(
     //Ajoute un item dans la liste
     //Update la DB en conséquence
     suspend fun addItemInTheList(id:String,label : String,hash: String) {
+
         return try {
+
             remoteDataSource.addItemInTheList(id,label,hash).also {
-                localDataSource.saveOrUpdateItemInTheList(it)
+                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(id,hash))
             }
         } catch (e: Exception) {
             localDataSource.addItemInTheList(id, label)

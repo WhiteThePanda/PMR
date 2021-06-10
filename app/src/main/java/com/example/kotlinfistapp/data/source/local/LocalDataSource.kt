@@ -1,6 +1,7 @@
 package com.example.kotlinfistapp.data.source.local
 
 import android.app.Application
+import android.content.ClipData
 import androidx.room.Room
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
@@ -13,40 +14,43 @@ class LocalDataSource(
     private val roomDatabase =
             Room.databaseBuilder(application, ToDoDatabase::class.java, "room-database").build()
 
-
     private val profilListeToDoDao = roomDatabase.profilListeToDoDao()
     private val listeToDoDao = roomDatabase.listeToDoDao()
     private val itemToDoDao = roomDatabase.itemToDoDao()
 
-    fun getUsersFromAPI(): List<ProfilListeToDo> {
-        TODO()
+    suspend fun getUsers(): List<ProfilListeToDo> {
+        return profilListeToDoDao.getProfils()
     }
 
-    fun getListsOfTheUserFromAPI(): MutableList<ListeToDo> {
-        TODO()
+    suspend fun getListsOfTheUser(): MutableList<ListeToDo> {
+        return listeToDoDao.getListes()
     }
 
-    fun saveOrUpdateLists(it: MutableList<ListeToDo>) {
-        TODO()
+    suspend fun getItemOfTheList(id: String): List<ItemToDo> {
+        return itemToDoDao.getItems(id)
+    }
+
+    suspend fun saveOrUpdateProfils(it: MutableList<ProfilListeToDo>) {
+        return profilListeToDoDao.saveOrUpdate(it)
     }
     
-    fun saveOrUpdateItems(it: MutableList<ItemToDo>) {
-        TODO()
+    suspend fun saveOrUpdateLists(items: MutableList<ListeToDo>) {
+        return listeToDoDao.saveOrUpdate(items)
     }
 
-    fun getItemOfTheList(id: String): List<ItemToDo> {
-        TODO()
+    suspend fun saveOrUpdateItems(item: MutableList<ItemToDo>) {
+        return itemToDoDao.saveOrUpdate(item)
     }
 
-    fun saveOrUpdateItemInTheList(it: Unit) {
-
+    suspend fun changeItemInTheList(idList: String, idItem: String, checked: String) {
+        var newItem : ItemToDo = itemToDoDao.getOneItem(idItem)
+        newItem.switchCheck(checked)
+        itemToDoDao.addItems(newItem)
     }
 
-    fun changeItemInTheList(idList: String, idItem: String, checked: String) {
-    }
-
-    fun addItemInTheList(id: String, label: String) {
-
+    suspend fun addItemInTheList(id: String, label: String) {
+        var item = ItemToDo(label)
+        itemToDoDao.addItems(item)
     }
 
 

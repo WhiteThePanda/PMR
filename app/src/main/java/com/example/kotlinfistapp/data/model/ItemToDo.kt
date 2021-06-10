@@ -30,4 +30,9 @@ data class ItemToDo(var descr : String):Serializable {
         fait= value
     }
 
+    public fun switchCheck(checked : String){
+        faitText = checked
+        fait = !fait
+    }
+
 }
