@@ -1,6 +1,7 @@
 package com.example.kotlinfistapp.data.source.local
 
 import android.app.Application
+import androidx.room.Room
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
 import com.example.kotlinfistapp.data.model.ProfilListeToDo
@@ -8,6 +9,11 @@ import com.example.kotlinfistapp.data.model.ProfilListeToDo
 class LocalDataSource(
     application: Application
 ) {
+    private val roomDatabase =
+            Room.databaseBuilder(application, ProductHuntRoomDatabase::class.java, "room-database").build()
+
+
+    private val postDao = roomDatabase.todoDao()
 
     fun getUsersFromAPI(): List<ProfilListeToDo> {
         TODO()
