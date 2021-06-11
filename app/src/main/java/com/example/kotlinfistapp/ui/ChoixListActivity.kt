@@ -6,13 +6,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinfistapp.*
 import com.example.kotlinfistapp.data.model.ListeToDo
 import com.example.kotlinfistapp.data.source.ToDoRepository
@@ -42,7 +43,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
         edtList = findViewById(R.id.newList)
         editor = sp?.edit()
         recyclerView = findViewById<RecyclerView>(R.id.listRecyclerView)
-        recyclerView.layoutManager=LinearLayoutManager(this)
+        recyclerView.layoutManager= LinearLayoutManager(this)
         listAdapter = ListRecyclerAdapter(this)
         recyclerView.adapter = listAdapter
         findViewById<Button>(R.id.buttonCreateList).setOnClickListener(this)
@@ -54,14 +55,13 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
         activityScope.launch {
             try {
                 val hash = sp?.getString("hash","")
-                mesListes = toDoRepository.getListsOfTheUserFromAPI(hash!!)
+                mesListes = toDoRepository.getListsOfTheUserFromAPI(hash!!,intent.getStringExtra("pseudo").toString())
                 RefreshRecyclerOnMainThread()
                 Log.d("PMRMoi",mesListes.toString())
             } catch (e: Exception) {
                 Log.d("PMRMoi",e.toString())
             }
         }
-
     }
     private suspend fun RefreshRecyclerOnMainThread()
     {
@@ -84,7 +84,7 @@ class ChoixListActivity : AppCompatActivity(), View.OnClickListener, ListRecycle
 
     override fun onItemClicked(position: Int) {
         val toItemAct: Intent = Intent(this, ShowListActivity::class.java)
-        toItemAct.putExtra("id",mesListes[position].GetId())
+        toItemAct.putExtra("id",mesListes[position].id)
         startActivity(toItemAct)
     }
 

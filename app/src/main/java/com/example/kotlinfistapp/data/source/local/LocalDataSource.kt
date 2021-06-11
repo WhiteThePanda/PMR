@@ -23,34 +23,39 @@ class LocalDataSource(
     }
 
     suspend fun getListsOfTheUser(): MutableList<ListeToDo> {
-        return listeToDoDao.getListes()
+        return listeToDoDao.getListes().toMutableList()
     }
 
-    suspend fun getItemOfTheList(id: String): List<ItemToDo> {
-        return itemToDoDao.getItems(id)
+    suspend fun getItemOfTheList(id: String): MutableList<ItemToDo> {
+        return itemToDoDao.getItems(id).toMutableList()
     }
 
     suspend fun saveOrUpdateProfils(it: MutableList<ProfilListeToDo>) {
         return profilListeToDoDao.saveOrUpdate(it)
     }
     
-    suspend fun saveOrUpdateLists(items: MutableList<ListeToDo>) {
+    suspend fun saveOrUpdateLists(items: MutableList<ListeToDo>,pseudo:String) {
+        for (item in items)
+        {
+            item.login=pseudo
+        }
         return listeToDoDao.saveOrUpdate(items)
     }
 
-    suspend fun saveOrUpdateItems(item: MutableList<ItemToDo>) {
-        return itemToDoDao.saveOrUpdate(item)
+    suspend fun saveOrUpdateItems(items: MutableList<ItemToDo>,idList: String) {
+        for (item in items)
+        {
+            item.idList=idList
+        }
+        return itemToDoDao.saveOrUpdate(items)
     }
 
     suspend fun changeItemInTheList(idList: String, idItem: String, checked: String) {
         var newItem : ItemToDo = itemToDoDao.getOneItem(idItem)
-        newItem.switchCheck(checked)
         itemToDoDao.addItems(newItem)
     }
 
     suspend fun addItemInTheList(id: String, label: String) {
-        var item = ItemToDo(label)
-        itemToDoDao.addItems(item)
     }
 
 

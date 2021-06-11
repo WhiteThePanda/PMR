@@ -1,13 +1,12 @@
 @file:Suppress("DEPRECATION")
 
 package com.example.kotlinfistapp.ui.adapter
-
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.R
 
@@ -44,7 +43,7 @@ class ItemRecyclerAdapter(private val actionListener: ActionListener, _items : L
             }
         }
         fun bind(itemToDo: ItemToDo){
-            titletextView.text = itemToDo.getDescription()
+            titletextView.text = itemToDo._description
             cbitem.isChecked = itemToDo.faitText != "0"
         }
     }

@@ -4,13 +4,13 @@ package com.example.kotlinfistapp.ui
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.ui.adapter.ItemRecyclerAdapter
 import com.example.kotlinfistapp.data.model.ItemToDo

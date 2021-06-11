@@ -7,24 +7,6 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 @Entity
-data class ProfilListeToDo(var name: String):Serializable {
-    @SerializedName("pseudo")
-    @PrimaryKey
-    private var _login : String = ""
-    // Le login est unique.
-
-    private var mesListesToDo : MutableList<ListeToDo> = mutableListOf<ListeToDo>()
-
-    init {
-        _login=name
-    }
-
-    public fun GetMesListesToDo() :MutableList<ListeToDo>{
-        return mesListesToDo
-    }
-    
-    override fun toString(): String {
-        return "User(_name='$_login', toDoList=$mesListesToDo)"
-    }
-
-}
+data class ProfilListeToDo(@SerializedName("pseudo")
+                           @PrimaryKey
+                           val _login : String)

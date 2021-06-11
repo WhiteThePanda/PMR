@@ -9,8 +9,8 @@ import com.example.kotlinfistapp.data.model.ListeToDo
 @Dao
 interface ListeToDoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveOrUpdate(listes: MutableList<ListeToDo>)
+    suspend fun saveOrUpdate(listes: List<ListeToDo>)
 
     @Query("SELECT * FROM LISTETODO")
-    suspend fun getListes(): MutableList<ListeToDo>
+    suspend fun getListes(): List<ListeToDo>
 }

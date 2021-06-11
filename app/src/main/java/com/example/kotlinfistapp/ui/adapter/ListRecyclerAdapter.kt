@@ -1,11 +1,10 @@
 package com.example.kotlinfistapp.ui.adapter
-
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinfistapp.data.model.ListeToDo
 import com.example.kotlinfistapp.R
 
@@ -46,7 +45,7 @@ class ListRecyclerAdapter(private val actionListener: ActionListener) : Recycler
             }
         }
         fun bind(toDoList: ListeToDo){
-            titletextView.text = toDoList.GetTitreListeToDo()
+            titletextView.text = toDoList.titreListeToDo
         }
     }
     interface ActionListener {

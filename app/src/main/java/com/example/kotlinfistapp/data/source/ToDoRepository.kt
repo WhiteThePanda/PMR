@@ -1,6 +1,7 @@
 package com.example.kotlinfistapp.data.source
 
 import android.app.Application
+import android.util.Log
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
 import com.example.kotlinfistapp.data.source.local.LocalDataSource
@@ -25,10 +26,11 @@ class ToDoRepository(
 
     //Récupérer les listes de l'utilisateur connecté
     //Update la DB en conséquence
-    suspend fun getListsOfTheUserFromAPI(hash:String): MutableList<ListeToDo> {
+    suspend fun getListsOfTheUserFromAPI(hash:String, pseudo : String): MutableList<ListeToDo> {
         return try {
             remoteDataSource.getListsOfTheUserFromAPI(hash).also {
-                localDataSource.saveOrUpdateLists(it)
+                localDataSource.saveOrUpdateLists(it,pseudo)
+                Log.d("youpi","lol")
             }
 
         } catch (e: Exception) {
@@ -39,10 +41,10 @@ class ToDoRepository(
     //Récupérer les items de la liste choisie par l'utilisateur (id)
     //Update la DB en conséquence
 
-    suspend fun getItemOfTheList(id : String, hash: String): List<ItemToDo> {
+    suspend fun getItemOfTheList(id : String, hash: String): MutableList<ItemToDo> {
         return try {
             remoteDataSource.getItemOfTheList(id, hash).also {
-                localDataSource.saveOrUpdateItems(it)
+                localDataSource.saveOrUpdateItems(it,id)
             }
 
         } catch (e: Exception) {
@@ -55,7 +57,7 @@ class ToDoRepository(
     suspend fun changeItemInTheList(idList : String, idItem : String , checked : String, hash : String) {
         return try {
             remoteDataSource.changeItemInTheList(idList, idItem, checked, hash).also {
-                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(idList,hash))
+                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(idList,hash),idList)
             }
         } catch (e: Exception) {
             localDataSource.changeItemInTheList(idList, idItem, checked)
@@ -69,7 +71,7 @@ class ToDoRepository(
         return try {
 
             remoteDataSource.addItemInTheList(id,label,hash).also {
-                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(id,hash))
+                localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(id,hash),id)
             }
         } catch (e: Exception) {
             localDataSource.addItemInTheList(id, label)
