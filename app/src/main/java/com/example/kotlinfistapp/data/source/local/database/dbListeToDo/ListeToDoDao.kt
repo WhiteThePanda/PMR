@@ -11,6 +11,6 @@ interface ListeToDoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveOrUpdate(listes: List<ListeToDo>)
 
-    @Query("SELECT * FROM LISTETODO")
-    suspend fun getListes(): List<ListeToDo>
+    @Query("SELECT * FROM LISTETODO where login = :pseudo")
+    suspend fun getListes(pseudo : String): List<ListeToDo>
 }

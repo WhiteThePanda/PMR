@@ -18,20 +18,17 @@ class LocalDataSource(
     private val listeToDoDao = roomDatabase.listeToDoDao()
     private val itemToDoDao = roomDatabase.itemToDoDao()
 
-    suspend fun getUsers(): List<ProfilListeToDo> {
-        return profilListeToDoDao.getProfils()
-    }
-
-    suspend fun getListsOfTheUser(): MutableList<ListeToDo> {
-        return listeToDoDao.getListes().toMutableList()
+    suspend fun getListsOfTheUser(pseudo: String): MutableList<ListeToDo> {
+        return listeToDoDao.getListes(pseudo).toMutableList()
     }
 
     suspend fun getItemOfTheList(id: String): MutableList<ItemToDo> {
         return itemToDoDao.getItems(id).toMutableList()
     }
 
-    suspend fun saveOrUpdateProfils(it: MutableList<ProfilListeToDo>) {
-        return profilListeToDoDao.saveOrUpdate(it)
+    suspend fun saveOrUpdateProfil(pseudo: String,mdp : String) {
+        val newProfil : ProfilListeToDo = ProfilListeToDo(pseudo,mdp)
+        return profilListeToDoDao.saveOrUpdate(newProfil)
     }
     
     suspend fun saveOrUpdateLists(items: MutableList<ListeToDo>,pseudo:String) {
@@ -51,11 +48,17 @@ class LocalDataSource(
     }
 
     suspend fun changeItemInTheList(idList: String, idItem: String, checked: String) {
-        var newItem : ItemToDo = itemToDoDao.getOneItem(idItem)
-        itemToDoDao.addItems(newItem)
+        val newItem : ItemToDo = itemToDoDao.getOneItem(idItem)
+        newItem.faitText=checked
+        itemToDoDao.changeItem(newItem)
     }
 
     suspend fun addItemInTheList(id: String, label: String) {
+    }
+
+    suspend fun getUser(pseudo: String, mdp: String) : ProfilListeToDo
+    {
+        return profilListeToDoDao.getUser(pseudo,mdp)
     }
 
 

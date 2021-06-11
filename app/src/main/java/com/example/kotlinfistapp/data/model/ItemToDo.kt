@@ -11,6 +11,6 @@ data class ItemToDo(
         @SerializedName("label")
         val _description : String,
         @SerializedName("checked")
-        val faitText : String,
+        var faitText : String,
         var idList:String
 )

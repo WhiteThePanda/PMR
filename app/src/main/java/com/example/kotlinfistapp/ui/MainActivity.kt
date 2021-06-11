@@ -19,8 +19,8 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import com.example.kotlinfistapp.R
+import com.example.kotlinfistapp.data.model.ProfilListeToDo
 import com.example.kotlinfistapp.data.source.ToDoRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        btnOk!!.isEnabled = verifReseau()
+        //btnOk!!.isEnabled = verifReseau()
         Log.d(TAG, "OnResume")
     }
 
@@ -125,17 +125,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 activityScope.launch {
                     try {
                         val hash : String = toDoRepository.authenticate(etPseudo!!.text.toString(), etMdp!!.text.toString())
+                        toDoRepository.saveUser(etPseudo!!.text.toString(), etMdp!!.text.toString())
                         editor!!.putString("hash", hash)
-                        Log.d(TAG,hash)
                         editor!!.commit()
-                        val bundle = Bundle()
-                        bundle.putString("pseudo", etPseudo!!.text.toString())
-                        val toSecondAct: Intent = Intent(this@MainActivity, ChoixListActivity::class.java)
-                        toSecondAct.putExtras(bundle)
-                        startActivity(toSecondAct)
+                        changeActivity()
+
                     } catch (e: Exception) {
                         myToast.show()
                         Log.d(TAG,e.toString())
+                    }
+                    if(!verifReseau())
+                    {
+                        try {
+                            val user : ProfilListeToDo = toDoRepository.checkIfUserIsInBDD(etPseudo!!.text.toString(), etMdp!!.text.toString())
+                            if(user != null)
+                            {
+                                changeActivity()
+                            }
+                        }
+                        catch (e:Exception)
+                        {
+                            Log.d(TAG,e.toString())
+                        }
                     }
                 }
             }
@@ -161,6 +172,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         return bStatut
+    }
+    suspend fun changeActivity()
+    {
+        val bundle = Bundle()
+        bundle.putString("pseudo", etPseudo!!.text.toString())
+        val toSecondAct: Intent = Intent(this@MainActivity, ChoixListActivity::class.java)
+        toSecondAct.putExtras(bundle)
+        startActivity(toSecondAct)
     }
 
     companion object {

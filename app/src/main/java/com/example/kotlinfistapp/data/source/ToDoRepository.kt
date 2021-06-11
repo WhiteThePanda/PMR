@@ -1,9 +1,9 @@
 package com.example.kotlinfistapp.data.source
 
 import android.app.Application
-import android.util.Log
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
+import com.example.kotlinfistapp.data.model.ProfilListeToDo
 import com.example.kotlinfistapp.data.source.local.LocalDataSource
 import com.example.kotlinfistapp.data.source.remote.RemoteDataSource
 import java.lang.Exception
@@ -24,17 +24,20 @@ class ToDoRepository(
         return remoteDataSource.authenticate(pseudo, mdp)
     }
 
+    suspend fun saveUser(pseudo:String, mdp:String)
+    {
+        localDataSource.saveOrUpdateProfil(pseudo,mdp)
+    }
     //Récupérer les listes de l'utilisateur connecté
     //Update la DB en conséquence
     suspend fun getListsOfTheUserFromAPI(hash:String, pseudo : String): MutableList<ListeToDo> {
         return try {
             remoteDataSource.getListsOfTheUserFromAPI(hash).also {
                 localDataSource.saveOrUpdateLists(it,pseudo)
-                Log.d("youpi","lol")
             }
 
         } catch (e: Exception) {
-            localDataSource.getListsOfTheUser()
+            localDataSource.getListsOfTheUser(pseudo)
         }
     }
 
@@ -68,14 +71,19 @@ class ToDoRepository(
     //Update la DB en conséquence
     suspend fun addItemInTheList(id:String,label : String,hash: String) {
 
-        return try {
-
+        return try
+        {
             remoteDataSource.addItemInTheList(id,label,hash).also {
                 localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(id,hash),id)
             }
         } catch (e: Exception) {
             localDataSource.addItemInTheList(id, label)
         }
+    }
+
+    suspend fun checkIfUserIsInBDD(pseudo: String, mdp: String) : ProfilListeToDo {
+        val user : ProfilListeToDo = localDataSource.getUser(pseudo,mdp)
+        return user
     }
 
     companion object {

@@ -9,4 +9,6 @@ import java.io.Serializable
 @Entity
 data class ProfilListeToDo(@SerializedName("pseudo")
                            @PrimaryKey
-                           val _login : String)
+                           val _login : String,
+                           val mdp : String
+)
