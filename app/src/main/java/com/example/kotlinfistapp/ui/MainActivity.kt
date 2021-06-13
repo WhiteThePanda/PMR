@@ -130,7 +130,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         changeActivity()
 
                     } catch (e: Exception) {
-                        myToast.show()
                         Log.d(TAG,e.toString())
                     }
                     if(!verifReseau())
@@ -145,6 +144,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         catch (e:Exception)
                         {
                             Log.d(TAG,e.toString())
+                            myToast.show()
                         }
                     }
                 }
