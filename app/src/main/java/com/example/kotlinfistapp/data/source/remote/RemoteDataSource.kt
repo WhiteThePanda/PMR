@@ -64,32 +64,17 @@ class RemoteDataSource {
     }
 
     suspend fun syncItems(itemsNonSync: MutableList<ItemToDo>,hash : String) {
-        Log.d("PMRMoi"," hash qui marche pas")
-        Log.d("PMRMoi",hash)
+
         for(item in itemsNonSync)
         {
-            Log.d("PMRMoi","item will be sync")
             try {
-                Log.d("PMRMoi","je suis dans le try")
-                Log.d("PMRMoi"," idList")
-                Log.d("PMRMoi",item.idList)
-                Log.d("PMRMoi"," idItem")
-                Log.d("PMRMoi",item.id)
-                Log.d("PMRMoi"," checked")
-                Log.d("PMRMoi",item.faitText)
-
                 service.changeItemInList(item.idList,item.id,item.faitText,hash)
-                Log.d("PMRMoi","je suis dans le try partie 2")
             }
             catch (e : Exception)
             {
-                Log.d("PMRMoi","je suis dans le catch")
                 Log.d("PMRMoi",e.toString())
-
             }
-            Log.d("PMRMoi","je suis après le try")
             item.isSync=true
-            Log.d("PMRMoi","item is sync")
         }
     }
 
