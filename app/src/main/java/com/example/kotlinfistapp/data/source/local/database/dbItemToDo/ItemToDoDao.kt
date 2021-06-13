@@ -15,6 +15,9 @@ interface ItemToDoDao {
     @Query("SELECT * FROM ITEMTODO WHERE IDlist = :id")
     suspend fun getItems(id:String): List<ItemToDo>
 
+    @Query("SELECT * FROM ITEMTODO WHERE isSync = 0")
+    suspend fun getItemNonSync(): List<ItemToDo>
+
     //Récupérer l'item dans la table ITEM désignée par son id
     @Query("SELECT * FROM ITEMTODO WHERE ID = :id")
     suspend fun getOneItem(id:String): ItemToDo

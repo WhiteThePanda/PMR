@@ -46,10 +46,14 @@ class LocalDataSource(
         }
         return itemToDoDao.saveOrUpdate(items)
     }
+    suspend fun saveOrUpdateSyncItems(items: MutableList<ItemToDo>) {
+        return itemToDoDao.saveOrUpdate(items)
+    }
 
     suspend fun changeItemInTheList(idList: String, idItem: String, checked: String) {
         val newItem : ItemToDo = itemToDoDao.getOneItem(idItem)
         newItem.faitText=checked
+        newItem.isSync=false
         itemToDoDao.changeItem(newItem)
     }
 
@@ -59,6 +63,11 @@ class LocalDataSource(
     suspend fun getUser(pseudo: String, mdp: String) : ProfilListeToDo
     {
         return profilListeToDoDao.getUser(pseudo,mdp)
+    }
+
+    suspend fun getNonSyncItem() : MutableList<ItemToDo> {
+        val lists = itemToDoDao.getItemNonSync()
+        return lists.toMutableList()
     }
 
 

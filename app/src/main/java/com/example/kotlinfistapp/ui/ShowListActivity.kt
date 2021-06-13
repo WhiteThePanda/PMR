@@ -1,7 +1,10 @@
 @file:Suppress("DEPRECATION")
 
 package com.example.kotlinfistapp.ui
+import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -27,6 +30,7 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
     var edtItem : EditText?= null
     var id : String = ""
     var APIBool : Boolean = true;
+    lateinit var hash : String
     private lateinit var itemAdapter : ItemRecyclerAdapter
     var listOfItem : MutableList<ItemToDo> = mutableListOf()
     lateinit var recyclerView : RecyclerView
@@ -47,10 +51,34 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
         recyclerView.adapter = itemAdapter
         id = this.intent.getStringExtra("id").toString()
         activityScope.launch {
-            val hash = sp?.getString("hash","")
-            Log.d("PMRMoi", id)
-            listOfItem.addAll(toDoRepository.getItemOfTheList(id, hash.toString()))
+            hash = sp?.getString("hash","").toString()
+            syncData()
+            listOfItem.addAll(toDoRepository.getItemOfTheList(id, hash))
             RefreshRecyclerOnMainThread()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!APIBool)
+        {
+            Log.d("PMRMoi","showListActivity On Resume")
+            activityScope.launch {
+                syncData()
+            }
+        }
+    }
+    suspend fun syncData()
+    {
+        if(verifReseau())
+        {
+            APIBool=true;
+            Log.d("PMRMoi","syncData")
+            toDoRepository.syncWithAPI(hash)
+            withContext(Main)
+            {
+                RefreshRecyclerOnMainThread()
+            }
         }
     }
     private suspend fun RefreshRecyclerOnMainThread()
@@ -105,6 +133,27 @@ class ShowListActivity : AppCompatActivity(), View.OnClickListener , ItemRecycle
                 }
             }
         }
+    }
+    private fun verifReseau(): Boolean {
+        // On vérifie si le réseau est disponible,
+        // si oui on change le statut du bouton de connexion
+        val cnMngr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cnMngr.activeNetworkInfo
+        var sType = "Aucun réseau détecté"
+        var bStatut = false
+        if (netInfo != null) {
+            val netState = netInfo.state
+            if (netState.compareTo(NetworkInfo.State.CONNECTED) == 0) {
+                bStatut = true
+                val netType = netInfo.type
+                when (netType) {
+                    ConnectivityManager.TYPE_MOBILE -> sType = "Réseau mobile détecté"
+                    ConnectivityManager.TYPE_WIFI -> sType = "Réseau wifi détecté"
+                }
+            }
+        }
+
+        return bStatut
     }
 
 }

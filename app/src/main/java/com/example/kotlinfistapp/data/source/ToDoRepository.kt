@@ -1,6 +1,7 @@
 package com.example.kotlinfistapp.data.source
 
 import android.app.Application
+import android.util.Log
 import com.example.kotlinfistapp.data.model.ItemToDo
 import com.example.kotlinfistapp.data.model.ListeToDo
 import com.example.kotlinfistapp.data.model.ProfilListeToDo
@@ -17,6 +18,13 @@ class ToDoRepository(
     public fun refreshURL(newValue:String)
     {
         return remoteDataSource.refreshURL(newValue)
+    }
+
+    suspend fun syncWithAPI(hash : String)
+    {
+        var itemsNonSync : MutableList<ItemToDo> = localDataSource.getNonSyncItem()
+        remoteDataSource.syncItems(itemsNonSync,hash)
+        localDataSource.saveOrUpdateSyncItems(itemsNonSync)
     }
 
     suspend fun authenticate(pseudo:String, mdp:String) : String
@@ -70,14 +78,12 @@ class ToDoRepository(
     //Ajoute un item dans la liste
     //Update la DB en conséquence
     suspend fun addItemInTheList(id:String,label : String,hash: String) {
-
         return try
         {
             remoteDataSource.addItemInTheList(id,label,hash).also {
                 localDataSource.saveOrUpdateItems(remoteDataSource.getItemOfTheList(id,hash),id)
             }
         } catch (e: Exception) {
-            localDataSource.addItemInTheList(id, label)
         }
     }
 

@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        //btnOk!!.isEnabled = verifReseau()
         Log.d(TAG, "OnResume")
     }
 

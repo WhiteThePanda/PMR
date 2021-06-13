@@ -12,5 +12,6 @@ data class ItemToDo(
         val _description : String,
         @SerializedName("checked")
         var faitText : String,
-        var idList:String
+        var idList:String,
+        var isSync : Boolean
 )
